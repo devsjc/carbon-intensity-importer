@@ -16,7 +16,7 @@ carbon-intensity-importer:
         - adaptor.py # Functions for modifying incoming data to the outgoing format
         - fetcher.py # Functions for fetching data over HTTP from the API endpoint
         - models.py # Class definitions for the structure of the incoming data
-  - models.py # Class definitions for structure of the internal data
+    - models.py # Class definitions for structure of the internal data
   - main.py # The entrypoint to the program
   - environment.yaml # Conda environment definition file
 ```
