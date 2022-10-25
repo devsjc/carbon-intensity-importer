@@ -18,7 +18,7 @@ carbon-intensity-importer:
         - models.py # Class definitions for the structure of the incoming data
     - models.py # Class definitions for structure of the internal data
   - main.py # The entrypoint to the program
-  - environment.yaml # Conda environment definition file
+  - requirements.txt # Conda environment definition file
 ```
 
 Here there is only one input and output, but by laying the project out in this manner it is easily extendable.
