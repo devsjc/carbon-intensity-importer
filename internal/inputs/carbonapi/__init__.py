@@ -3,6 +3,6 @@ Specify public package contents, accessed via
 import internal.inputs.carbonapi
 """
 
-from .adaptor import AdaptResponse
-from .fetcher import FetchFromCarbonAPI
+from .adaptor import AdaptResponse, AdaptData
+from .fetcher import FetchFromCarbonAPI, APIInterface
 from .models import CarbonIntensityResponsePayload

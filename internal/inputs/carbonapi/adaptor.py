@@ -1,19 +1,20 @@
 """
 Adaptors for converting from input data to internal data
 """
+import logging
 
 from .models import CarbonIntensityResponsePayload, Data
 import internal
 
 
-def _adaptData(data: Data) -> list[internal.CSVRow]:
+def AdaptData(data: Data) -> list[internal.CSVRow]:
     """
-    _adaptData converts a Data object to the internal CSVRow service class
+    AdaptData converts a Data object to a list of CSVRow objects
     """
     adaptedList: list[internal.CSVRow] = []
 
     if data.regions:
-        # convert regional data
+        # convert each region's data
         for region in data.regions:
             adaptedList.append(internal.CSVRow(
                 StartTimestampUTC=data.start.isoformat(timespec='minutes'),
@@ -24,7 +25,7 @@ def _adaptData(data: Data) -> list[internal.CSVRow]:
                 Region=region.shortname,
             ))
     else:
-        # convert national data
+        # convert single point of national data
         adaptedList.append(internal.CSVRow(
             StartTimestampUTC=data.start.isoformat(timespec='minutes'),
             EndTimestampUTC=data.end.isoformat(timespec='minutes'),
@@ -42,10 +43,11 @@ def AdaptResponse(response: CarbonIntensityResponsePayload) -> list[internal.CSV
     to either a single CSVRow entry in the national case or a list of CSVRow entries
     in the regional case. The resultant CSVRows are returned as a concatenated list.
 
-    If there is no data to convert, an empty list is returned.
+    If there is no data to convert and/or an error in the data, an empty list is returned.
     """
     out: list[internal.CSVRow] = []
+
     if response.data:
         for dataEntry in response.data:
-            out.extend(_adaptData(data=dataEntry))
+            out.extend(AdaptData(data=dataEntry))
     return out

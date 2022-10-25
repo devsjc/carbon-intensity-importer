@@ -3,10 +3,11 @@ Functions for fetching data from the input
 """
 import logging
 
+import pydantic as pyd
 import requests
 import datetime as dt
 
-from .models import CarbonIntensityResponsePayload, APIInterface
+from .models import CarbonIntensityResponsePayload, APIInterface, Error
 
 
 class CarbonAPIHandler(APIInterface):
@@ -23,15 +24,18 @@ class CarbonAPIHandler(APIInterface):
         regional parameter..
         """
 
+        # choose fw48hr National or Regional endpoint
         if regional:
             url = f'{self.baseurl}/regional/intensity/{timestamp.isoformat(timespec="minutes")}/fw48h'
         else:
             url = f'{self.baseurl}/intensity/{timestamp.isoformat(timespec="minutes")}/fw48h'
 
+        # fetch response
         response = requests.get(url)
+
         if not response.ok:
-            logging.error(f'error fetching API data: {response.text}')
-            return {}
+            logging.error(f"{response.status_code} error code received from GET {url}: {response.json()['error']}")
+
         return response.json()
 
 
@@ -44,5 +48,19 @@ def FetchFromCarbonAPI(
     and converts the output dict to a CarbonIntensityResponsePayload object.
     """
     responseJson = handler.fetchResponse(timestamp=timestamp, regional=regional)
-    return CarbonIntensityResponsePayload(**responseJson)
+
+    # Validate the input by parsing to model class
+    try:
+        out = CarbonIntensityResponsePayload(**responseJson)
+    except pyd.ValidationError as e:
+        # Fail soft
+        logging.error(f"Error parsing json response as struct: {str(e)}")
+        out = CarbonIntensityResponsePayload(
+            error=Error(
+                code="409 Conflict",
+                message=str(e)
+            )
+        )
+
+    return out
 
