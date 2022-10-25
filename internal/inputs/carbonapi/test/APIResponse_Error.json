@@ -1,0 +1,6 @@
+{
+  "error":{
+    "code": "400 Bad Request",
+    "message": "Please enter a valid datetime in ISO8601 format YYYY-MM-DDThh:mmZ e.g. /intensity/2017-08-25T15:30Z"
+  }
+}
