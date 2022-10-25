@@ -1,5 +1,5 @@
 name: carbon-intensity-import-ci
-run-name: Pipeline ${{ github.run_id }} for ${{ github.event_name }} on ${{ github.ref_name }}
+run-name: Run ${{ github.run_id }}
 on: [push]
 
 jobs:
