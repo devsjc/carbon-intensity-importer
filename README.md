@@ -2,6 +2,8 @@
 
 Data importer for the National Grid's Carbon Intensity API.
 
+Pulls national and regional data from the API, and exports it in CSV format, found at out.csv.
+
 Links: https://carbonintensity.org.uk/
 
 ## Repository structure
@@ -31,3 +33,6 @@ Carbon Intensity Importer uses [pydantic](https://pydantic-docs.helpmanual.io/) 
 
 This could be happily packaged to a dockerfile and deployed as an airflow or kubernetes cron job, or even on a scheduled GitHub or GitLab CI pipeline.
 
+## Output
+
+The output for a run with the current configuration can be found at out.csv

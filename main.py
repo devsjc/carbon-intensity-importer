@@ -17,7 +17,7 @@ def main():
     logging.basicConfig(
         stream=sys.stdout,
         format='%(asctime)s %(levelname)-8s %(message)s',
-        level=logging.INFO,
+        level=logging.DEBUG,
     )
 
     with open('out.csv', 'w') as f:

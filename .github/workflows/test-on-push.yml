@@ -1,0 +1,21 @@
+name: CI-Pipeline
+run-name: CI Run ${{ github.run_id }}
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: python:3.10
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install unittest-xml-reporting
+      - name: Run tests
+        run: python -m xmlrunner discover -t tests -o results/junit-reports
+      - name: Create test summary
+        uses: test-summary/action@dist
+        with:
+          paths: results/**/*.xml
