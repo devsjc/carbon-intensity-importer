@@ -14,8 +14,8 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install unittest-xml-reporting
       - name: Run tests
-        run: python -m xmlrunner discover -t tests -o results/junit-reports
+        run: python -m xmlrunner discover -t tests -s tests -o tests/junit-reports
       - name: Create test summary
         uses: test-summary/action@dist
         with:
-          paths: results/**/*.xml
+          paths: tests/**/*.xml
