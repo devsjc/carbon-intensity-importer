@@ -1,5 +1,4 @@
-name: Program-Runner
-run-name: Program Run ${{ github.run_id }}
+name: Run
 on: workflow_dispatch
 
 jobs:

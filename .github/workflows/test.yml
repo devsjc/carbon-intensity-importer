@@ -1,6 +1,5 @@
-name: CI-Pipeline
-run-name: CI Run ${{ github.run_id }}
-on: [push]
+name: Test
+on: [push, pull_request]
 
 jobs:
   test:
