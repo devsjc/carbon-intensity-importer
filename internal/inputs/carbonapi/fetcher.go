@@ -1,4 +1,4 @@
-package main
+package carbonapi
 
 import (
 	"encoding/json"
@@ -54,7 +54,7 @@ func FetchFromCarbonAPI(t time.Time, regional bool, handler APIInterface) (paylo
 	err := json.Unmarshal(responseBytes, &payload)
 	if err != nil {
 		log.Printf("Error unmarshalling reponse to struct: %v", err)
-		payload.Error = &Error{
+		payload.Error = Error{
 			Code:    "409 Conflict",
 			Message: err.Error(),
 		}

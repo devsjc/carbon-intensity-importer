@@ -5,6 +5,9 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"carbon-intensity-importer/internal"
+	"carbon-intensity-importer/internal/inputs/carbonapi"
 )
 
 var (
@@ -22,7 +25,7 @@ func main() {
 
 	// Write header to CSV
 	csvWriter := csv.NewWriter(f)
-	err = csvWriter.Write(CSVRow{}.GetHeaders())
+	err = csvWriter.Write(internal.CSVRow{}.GetHeaders())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,23 +36,25 @@ func main() {
 	_numResponses := int(_delta / _increment)
 
 	// Process national and regional data
-	log.Printf("Pulling %s sets of National and Regional 48hr data.", _numResponses)
+	log.Printf("Pulling %d sets of National and Regional 48hr data.", _numResponses)
 	dateCounter := START
 
 	for i := 0; i < _numResponses; i++ {
-		log.Printf("Processing response for %s ({%v}/{%v})", dateCounter.Format(TimeFormat), i, _numResponses)
+		log.Printf("Processing response for %s ({%v}/{%v})", dateCounter.Format(carbonapi.TimeFormat), i, _numResponses)
 
 		// Fetch data from API
-		nationalPayload := FetchFromCarbonAPI(dateCounter, false, &CarbonApiHandler{})
-		regionalPayload := FetchFromCarbonAPI(dateCounter, true, &CarbonApiHandler{})
+		nationalPayload := carbonapi.FetchFromCarbonAPI(dateCounter, false, &carbonapi.CarbonApiHandler{})
+		regionalPayload := carbonapi.FetchFromCarbonAPI(dateCounter, true, &carbonapi.CarbonApiHandler{})
 		// Transform responses to output shape
-		data := AdaptResponse(nationalPayload)
-		data = append(data, AdaptResponse(regionalPayload)...)
+		data := carbonapi.AdaptResponse(nationalPayload)
+		data = append(data, carbonapi.AdaptResponse(regionalPayload)...)
 
 		// Write rows to CSV
 		for _, row := range data {
 			err = csvWriter.Write(row.GetRow())
-			log.Printf("Error writing row: %v", err)
+			if err != nil {
+				log.Printf("Error writing row %v, for %v", err, row)
+			}
 		}
 
 		dateCounter.Add(_increment)
