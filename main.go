@@ -57,7 +57,7 @@ func main() {
 			}
 		}
 
-		dateCounter.Add(_increment)
+		dateCounter = dateCounter.Add(_increment)
 	}
 
 }
