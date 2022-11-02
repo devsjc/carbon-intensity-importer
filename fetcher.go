@@ -32,15 +32,15 @@ func (*CarbonApiHandler) FetchResponse(t time.Time, regional bool) []byte {
 	// Fetch response
 	resp, err := http.Get(url)
 
-	if err != nil || resp.StatusCode < 400 {
-		log.Print(err)
+	if err != nil || resp.StatusCode >= 400 {
+		log.Printf("Error fetching data: %v", err)
 	}
 
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Print(err)
+		log.Printf("Error reading reponse body: %v", err)
 	}
 
 	return body
@@ -53,7 +53,7 @@ func FetchFromCarbonAPI(t time.Time, regional bool, handler APIInterface) (paylo
 
 	err := json.Unmarshal(responseBytes, &payload)
 	if err != nil {
-		log.Print(err)
+		log.Printf("Error unmarshalling reponse to struct: %v", err)
 		payload.Error = &Error{
 			Code:    "409 Conflict",
 			Message: err.Error(),
