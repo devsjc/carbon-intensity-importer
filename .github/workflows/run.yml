@@ -4,14 +4,14 @@ on: workflow_dispatch
 jobs:
   run:
     runs-on: ubuntu-latest
-    container: python:3.10
+    container: golang:1.19
 
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
-        run: python -m pip install -r requirements.txt
+        run: go build
       - name: Run importer
-        run: python main.py
+        run: ./carbon-intensity-importer
       - name: Archive produced CSV
         uses: actions/upload-artifact@v3
         with:
